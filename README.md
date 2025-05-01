@@ -1,2 +1,192 @@
 # SNPBreedingTools
- 
+# Tool execuitable is available as lgctools 
+## Installation 
+
+1. lgctools options:  
+`$ lgctools --help`  
+`usage: lgctools [-h] [--summary] [--rename] [--out-grid] [--out-flapjack] [--out-hapmap]`   
+`                [--differences] [--performance] [--make-plots] [--bestmarkers] [--markercloud]`  
+`                [--filter] [--pedver] [--consensus] [--fwdbreed] [--lgc-file <FILE>]`  
+`                [--lgc-files <FILES> [<FILES> ...]] [--grid-file <FILE>] [--grid-files <FILES>]`  
+`                [--hmp-file <FILE>] [--samplemap-file <FILE>] [--ped-file <FILE>]`  
+`                [--designation-file <FILE>] [--meta-data <FILE>] [--marker-list <FILE>]`  
+`                [--sample-list <FILE>] [--male-parents-list <FILE>] [--female-parents-list <FILE>]`  
+`                [--qtl-file <FILE>] [--out <STR>] [--f1het-cutOff <INT>]`  
+`                [--consensus-cutOff <INT>] [--max-missing-site <INT>] [--min-pic-site <FLOAT>]`  
+`                [--min-maf-site <FLOAT>] [--max-missing-sample <INT>]`  
+`QC pipeline: Processes the LGC file for tasks involved in purity check`   
+`optional arguments:`  
+`  -h, --help            show this help message and exit`  
+`  --summary             Generate sample and marker summary for the data from genotype file`  
+`  --rename              Rename the samples provided in the genotype file`  
+`  --out-grid            Write genotype data in grid file format`  
+`  --out-flapjack        Write genotype data in flapjack file format`  
+`  --out-hapmap          Write genotype data in hapmap file format`  
+`  --differences         Find polymorphic markers between genotypes`  
+`  --performance         Check performance of the provided marker set`  
+`  --make-plots          Create plots based on the LGC data`  
+`  --bestmarkers         Find best markers from the given marker set`  
+`  --markercloud         Based on best marker summary make word cloud`  
+`  --filter              Filter genotype data`  
+`  --pedver              Analyze genotype data for F1 Verification`  
+`  --consensus           Call consensus and make purity reports`  
+`  --fwdbreed            Analyze genotype data for favorable allele propotions`  
+`  --lgc-file <FILE>     LGC raw data File`  
+`  --lgc-files <FILES> [<FILES> ...]`  
+`                        LGC raw data File`  
+`  --grid-file <FILE>    LGC Grid Matrix File`  
+`  --grid-files <FILES>  Comma seperated LGC Grid Matrix Files`  
+`  --hmp-file <FILE>     Hapmap genotype File`  
+`  --samplemap-file <FILE>`  
+`                        Tab seperated sample map file. <SAMPLE_ID> <SAMPLE_NAME>`  
+`  --ped-file <FILE>     Tab seperated Pedigree File. <F_ONE> <PAR_A> <PAR_B>`  
+`  --designation-file <FILE>`  
+`                        Tab seperated Designations parent File. <SAMPLE_NAME> <DESIGNATION>`  
+`  --meta-data <FILE>    Parent information file`  
+`  --marker-list <FILE>  File with list of snps to analyze`  
+`  --sample-list <FILE>  File with list of samples to analyze`  
+`  --male-parents-list <FILE>`  
+`                        File with list of male parents to consider`  
+`  --female-parents-list <FILE>`  
+`                        File with list of female parents to consider`  
+`  --qtl-file <FILE>     QTL file in GOBii format`  
+`  --out <STR>           Output filename prefix`  
+`  --f1het-cutOff <INT>  Percentage expected heterozygosity for F1 verification`  
+`  --consensus-cutOff <INT>`  
+`                        Percentage propotion to be considered to call consensus`  
+`  --max-missing-site <INT>`  
+`                        Percentage propotion to be considered for maximum missing per marker`  
+`  --min-pic-site <FLOAT>`  
+`                        Percentage propotion to be considered for PIC per marker`  
+`  --min-maf-site <FLOAT>`  
+`                        Percentage propotion to be considered for MAF per marker`  
+`  --max-missing-sample <INT>`  
+`                        Percentage propotion to be considered for maximum missing per sample`  
+
+## Get summary information of an LGC file.
+
+1. __Input:__  LGC file in csv format
+2. __Command:__  `$ lgctools --summary --lgc-file <filename>`
+3. __Ouput(s):__  `tsv files: out_marker_summary.txt, out_sample_summary.txt`
+
+__Note:__  By default, the script automatically creates files with filenames prefixed with `out_`. You can specify a custom prefix to identify the output. The command now looks like and will create filenames with `my_output` prefix:  
+`$ lgctools --summary --lgc-file <filename> --out my_output` 
+
+## Rename sample names in genotype file
+
+1. __Input:__ LGC file; Sample map file (see note below)  
+2. __Command:__ `$ lgctools –-rename --samplemap-file <sample map file> –-lgc-file <lgc file> –-out my_out`  
+3. __Output:__ grid file  
+  
+__Note:__ Sample map file is a two-column file where the first column is the LGC sample ID and the second column is the BMS sample name (unique ID).  
+  
+`LGC_SampleID    BMS_SampleName`  
+`8T3QSA1xhsFY0   CIMMYTV 181114:9`  
+`8T3QSY1HUsiNz   CIMMYTV 181114:10`  
+`8T3QSC3xbel7z   CIMMYTV 181114:11`  
+`8T3QSNYuhxw1N   CIMMYTV 181114:12`  
+`8T3QSTpBTNk5n   CIMMYTV 181114:13`  
+`8T3QSABgN751a   CIMMYTV 181114:14`  
+`8T3QSgixO4FwT   CIMMYTV 181114:15`  
+`8T3QSk0EeAAzQ   CIMMYTV 181114:16`  
+`8T3QS0euXBPTF   CIMMYTV 181117:9`  
+`8T3QS83sNaLkE   CIMMYTV 181117:10`  
+`8T3QSZ6MthiVs   CIMMYTV 181117:11`  
+`8T3QSRzHV8meN   CIMMYTV 181117:12`  
+`8T3QS0ZrSVhZB   CIMMYTV 181117:13`  
+`8T3QS7MH6iQvz   CIMMYTV 181117:14`  
+`8T3QSHcS8awvu   CIMMYTV 181117:15`  
+
+## Convert an lgc file to hapmap (to do, create example for all compatible file formats)
+
+1. __Input:__ LGC file  
+2. __Command:__ `$ lgctools –-lgc-file <lgc file> –-out my_out –-out-hapmap`  
+3. __Output:__ `my_out.hmp.txt`  
+  
+__Note:__ You can also convert an LGC file into grid and flapjack formats by replacing `--out-hapmap` with `--out-flapjack` or `--out-grid`. Similarly, you can convert a grid file into hapmap by replacing `--lgc-file` with `--grid-file` and corresponding output file: `--out-hapmap`.  
+
+## Get all possible polymorphic markers in all pairwise genotypic combinations. (to do, include --prefix, create examples for other file formats hapmap, grid).
+
+1. __Input:__ LGC or hapmap or grid file  
+2. __Command:__ `$ lgctools –-lgc-file <lgc-file> –-differences –-out diff`  
+3. __Output:__ `diff.txt`  
+  
+__Note:__ You can specify a hapmap or grid file by replacing `--lgc-file` with corresponding input type (`--hapmap-file` or `--grid-file`). Output is a table of markers for all pairwise genotypes combinations.  
+
+__Discussion of output . Show screenshot of output and discuss the result.__ 
+
+## Get performance of markers out of all pairwise genotypes combinations.
+
+1. __Input:__ LGC or hapmap or grid files  
+2. __Command:__ `$ lgctools --lgc-file <lgc file> --performance`  
+3. __Output:__ Displayed in the terminal:   
+`[Wed Apr  6 17:37:05 2021] - Reading input LGC genotype data (Genotyping-008.105-02.csv)...`  
+`[Wed Apr  6 17:37:05 2021] - Data processing compeleted...`  
+`[Wed Apr  6 17:37:05 2021] - Input data : 1496 samples x 14 markers`  
+`[Wed Apr  6 17:37:05 2021] - Checking performance...`  
+`------------------------------------------------------------`  
+`[Wed Apr  6 17:37:16 2021] - Marker Performance on the Data`  
+`------------------------------------------------------------`  
+`------------------------------------------------------------`  
+`Total combinations                        : 1118260`  
+`Combinations with ZERO polymorphic markers: 166587 (14.9 %)`  
+`Combinations with >= 1 polymorphic markers: 951673 (85.1 %)`  
+`Combinations with >= 2 polymorphic markers: 797860 (71.35 %)`  
+`------------------------------------------------------------`  
+`[Wed Apr  6 17:37:16 2021] - Total Time taken for the process 11.22 seconds`  
+  
+__Discussion: Highlighted is the performance of the markers. (Siva: could add the explanation.)__
+  
+__Note:__ You can pipe the output to a file using the “>” and a filename:  
+`$ lgctools --lgc-file <lgc file> --performance > mrkr_performance.txt`   
+
+## Create visualization (dot plot) of allele (homo vs hetero) for each markers.
+
+1. __Input:__ LGC file  
+2. __Command:__ `$ lgctools –-lgc-file <lgc file> –-make-plots –-out plot`  
+3. __Output:__ x number of png files for x genotypes.  
+  
+__Discuss output here.__  
+
+## Identify a cost effective set of markers for a given population. (to do: add command and input file. )
+
+1. __Input:__ Parent A; Parent B; a set of individuals  
+2. __Command:__  
+3. __Output:__  
+  
+__Discuss output__
+
+## I want to verify the pedigree. (to do: add command and input file. )
+
+1. __Input:__ pedigree, grid, or hapmap file.  
+2. __Command:__ `$ lgctools --grid-file grid.csv --ped-file pedigree.txt --pedver`  
+3. __Output:__  
+  
+__Discuss output__  
+
+## I want to generate consensus. (to do: add command and input file. )
+
+1. __Input:__  
+2. __Command:__  
+3. __Output:__  
+  
+## Forward breeding (to do: add command and input file. )
+
+1. __Input:__ Parent A (string); Parent B (string); QTL information  
+2. __Command:__  
+3. __Output:__  
+
+
+## 👥 Contributors
+
+- **Dr. Abhishek Rathore** — Principal Scientist, Breeding Data & Informatics
+- **Mr. Sivasubramani Selvanayagam** — Bioinformatics & Software Developer
+- **Dr. Roma Rani Das** — Biometrician
+- **Mr. Peter Kimathi** — Bioinformatics & Software Developer
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
